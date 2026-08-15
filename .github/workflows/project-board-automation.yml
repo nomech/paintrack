@@ -1,0 +1,186 @@
+name: Project board automation
+
+on:
+  issues:
+    types:
+      - opened
+  pull_request_target:
+    types:
+      - closed
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  projects: write
+
+env:
+  PROJECT_V2_NUMBER: ${{ vars.PROJECT_V2_NUMBER }}
+
+jobs:
+  sync-project-item-status:
+    if: vars.PROJECT_V2_NUMBER != '' && (github.event_name == 'issues' || (github.event_name == 'pull_request_target' && github.event.pull_request.merged == true))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add item to project and update status
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.PROJECT_AUTOMATION_TOKEN || github.token }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const projectNumber = Number(process.env.PROJECT_V2_NUMBER);
+            const isIssueEvent = context.eventName === "issues";
+            const itemNumber = isIssueEvent ? context.payload.issue.number : context.payload.pull_request.number;
+            const targetStatus = isIssueEvent ? "Backlog" : "Done";
+            const contentType = isIssueEvent ? "issue" : "pullRequest";
+
+            const projectDataQuery = `
+              query($owner: String!, $number: Int!) {
+                organization(login: $owner) {
+                  projectV2(number: $number) {
+                    id
+                    fields(first: 50) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            id
+                          }
+                          ... on PullRequest {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+                user(login: $owner) {
+                  projectV2(number: $number) {
+                    id
+                    fields(first: 50) {
+                      nodes {
+                        ... on ProjectV2SingleSelectField {
+                          id
+                          name
+                          options {
+                            id
+                            name
+                          }
+                        }
+                      }
+                    }
+                    items(first: 100) {
+                      nodes {
+                        id
+                        content {
+                          ... on Issue {
+                            id
+                          }
+                          ... on PullRequest {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            `;
+
+            const repositoryItemQuery = `
+              query($owner: String!, $repo: String!, $number: Int!) {
+                repository(owner: $owner, name: $repo) {
+                  issue(number: $number) {
+                    id
+                  }
+                  pullRequest(number: $number) {
+                    id
+                  }
+                }
+              }
+            `;
+
+            const projectResult = await github.graphql(projectDataQuery, {
+              owner,
+              number: projectNumber,
+            });
+
+            const project = projectResult.organization?.projectV2 ?? projectResult.user?.projectV2;
+            if (!project) {
+              core.setFailed(`Project #${projectNumber} was not found for owner "${owner}".`);
+              return;
+            }
+
+            const repositoryItemResult = await github.graphql(repositoryItemQuery, {
+              owner,
+              repo,
+              number: itemNumber,
+            });
+            const contentId = repositoryItemResult.repository?.[contentType]?.id;
+            if (!contentId) {
+              core.setFailed(`${contentType} #${itemNumber} was not found in ${owner}/${repo}.`);
+              return;
+            }
+
+            let itemId = project.items.nodes.find((item) => item.content?.id === contentId)?.id;
+            if (!itemId) {
+              const addItemMutation = `
+                mutation($projectId: ID!, $contentId: ID!) {
+                  addProjectV2ItemById(input: { projectId: $projectId, contentId: $contentId }) {
+                    item {
+                      id
+                    }
+                  }
+                }
+              `;
+
+              const addResult = await github.graphql(addItemMutation, {
+                projectId: project.id,
+                contentId,
+              });
+              itemId = addResult.addProjectV2ItemById.item.id;
+            }
+
+            const statusField = project.fields.nodes.find((field) => field.name === "Status");
+            const statusOption = statusField?.options.find((option) => option.name === targetStatus);
+            if (!statusField || !statusOption) {
+              core.setFailed(`Could not find Status field option "${targetStatus}" in project #${projectNumber}.`);
+              return;
+            }
+
+            const updateStatusMutation = `
+              mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $optionId: String!) {
+                updateProjectV2ItemFieldValue(
+                  input: {
+                    projectId: $projectId
+                    itemId: $itemId
+                    fieldId: $fieldId
+                    value: { singleSelectOptionId: $optionId }
+                  }
+                ) {
+                  projectV2Item {
+                    id
+                  }
+                }
+              }
+            `;
+
+            await github.graphql(updateStatusMutation, {
+              projectId: project.id,
+              itemId,
+              fieldId: statusField.id,
+              optionId: statusOption.id,
+            });
