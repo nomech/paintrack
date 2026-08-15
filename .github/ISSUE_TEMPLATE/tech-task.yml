@@ -1,0 +1,29 @@
+name: Tech task
+description: Track technical work that is not a user-facing feature
+title: "tech: "
+labels:
+  - tech-task
+body:
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Why is this task needed?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: What is in and out of scope?
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Definition of done
+      placeholder: |
+        - [ ] Item 1
+        - [ ] Item 2
+    validations:
+      required: true
