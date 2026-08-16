@@ -42,7 +42,7 @@ jobs:
           cache: pnpm
 
       - name: Restore Turbo cache
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .turbo
           key: ${{ runner.os }}-turbo-${{ matrix.name }}-${{ hashFiles('pnpm-lock.yaml', 'turbo.json') }}
