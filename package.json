@@ -8,7 +8,10 @@
 		"lint": "turbo lint",
 		"typecheck": "turbo typecheck",
 		"test": "pnpm -r --if-present test",
-		"prepare": "husky"
+		"prepare": "husky",
+		"db:generate": "npx drizzle-kit generate",
+		"db:migrate": "npx drizzle-kit migrate",
+		"db:studio": "npx drizzle-kit studio"
 	},
 	"devDependencies": {
 		"@commitlint/config-conventional": "^21.2.1",
