@@ -1,22 +1,25 @@
 {
-  "name": "my-app",
-  "type": "module",
-  "version": "0.1.0",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "typecheck": "tsc --noEmit",
-    "start": "node dist/index.js"
-  },
-  "dependencies": {
-    "@hono/node-server": "^2.1.1",
-    "hono": "^4.13.2",
-    "hono-rate-limiter": "^0.5.3",
-    "zod": "^4.4.3"
-  },
-  "devDependencies": {
-    "@types/node": "^26.1.1",
-    "tsx": "^4.23.0",
-    "typescript": "^7.0.2"
-  }
+	"name": "paintrack-backend",
+	"type": "module",
+	"version": "0.1.0",
+	"scripts": {
+		"dev": "tsx watch src/index.ts",
+		"build": "tsc",
+		"typecheck": "tsc --noEmit",
+		"start": "node dist/index.js"
+	},
+	"dependencies": {
+		"@hono/node-server": "^2.1.1",
+		"dotenv": "^17.4.2",
+		"drizzle-orm": "^0.45.2",
+		"hono": "^4.13.2",
+		"hono-rate-limiter": "^0.5.3",
+		"zod": "^4.4.3"
+	},
+	"devDependencies": {
+		"@types/node": "^26.2.0",
+		"drizzle-kit": "^0.31.10",
+		"tsx": "^4.23.0",
+		"typescript": "^7.0.2"
+	}
 }
