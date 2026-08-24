@@ -4,8 +4,11 @@ import { config } from "./config.js";
 import healthRoute from "./v1/routes/healthRoutes.js";
 import readyRoute from "./v1/routes/readyRoute.js";
 import { client } from "./db/client.js";
+import corsConfig from "./middleware/cors.js";
 
 const app = new Hono();
+
+app.route("/", corsConfig);
 
 app.route("/v1", healthRoute);
 app.route("/v1", readyRoute);
