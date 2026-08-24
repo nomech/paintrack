@@ -8,6 +8,13 @@
       "when": 1786872143682,
       "tag": "0000_mean_demogoblin",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787599373087,
+      "tag": "0001_outstanding_tarot",
+      "breakpoints": true
     }
   ]
 }
