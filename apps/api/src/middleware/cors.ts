@@ -5,12 +5,9 @@ const corsConfig = new Hono();
 
 // CORS should be called before the route
 corsConfig.use(
-  "/api/*",
+  "*",
   cors({
-    origin: [
-      "https://curious-puffpuff-92fa8c.netlify.app",
-      "http://localhost:5173",
-    ],
+    origin: "*",
     allowHeaders: [
       "X-Custom-Header",
       "Upgrade-Insecure-Requests",
