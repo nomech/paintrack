@@ -54,3 +54,26 @@ jobs:
 
       - name: Run ${{ matrix.name }}
         run: ${{ matrix.command }}
+
+  migrations-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check for uncommitted migration drift
+        working-directory: apps/api
+        env:
+          DATABASE_URL: postgres://ci:ci@localhost:5432/ci
+        run: |
+          npx drizzle-kit generate
+          git diff --exit-code supabase/migrations
