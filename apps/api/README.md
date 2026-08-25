@@ -1,6 +1,6 @@
 ```
-npm install
-PORT=3000 npm run dev
+pnpm install
+PORT=3000 pnpm dev
 ```
 
 ```
@@ -18,15 +18,15 @@ Set in `apps/api/.env` (git-ignored, never committed):
 | `DATABASE_HEALTH_URL`  | Supabase REST endpoint used by the readiness check                  | `https://<project>.supabase.co/rest/v1/` |
 | `DATABASE_SECRET_KEY`  | Supabase service secret key used for the readiness check            | `sb_secret_...`                        |
 
-There's a single dev Supabase project and no separate staging database — the same `DATABASE_URL`/`DATABASE_HEALTH_URL`/`DATABASE_SECRET_KEY` values are used for both `npm run dev` and the production-mode run below.
+There's a single dev Supabase project and no separate staging database — the same `DATABASE_URL`/`DATABASE_HEALTH_URL`/`DATABASE_SECRET_KEY` values are used for both `pnpm dev` and the production-mode run below.
 
 ## Production-mode local run
 
-Runs the compiled output directly (no `tsx`/watch mode), on a port separate from `npm run dev` so both can run side by side:
+Runs the compiled output directly (no `tsx`/watch mode), on a port separate from `pnpm dev` so both can run side by side:
 
 ```
-npm run build
-PORT=3001 npm start
+pnpm build
+PORT=3001 pnpm start
 ```
 
 `PORT=3001` keeps this from colliding with the dev server on `3000`. `DATABASE_URL`, `DATABASE_HEALTH_URL` and `DATABASE_SECRET_KEY` stay whatever is already in `apps/api/.env` — same dev Supabase project either way.
