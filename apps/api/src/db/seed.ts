@@ -1,7 +1,7 @@
 import { client, db } from "./client.js";
 import { brandTable } from "./schema.js";
 
-const brands = [{ brandName: "Citadel" }, { brandName: "Vallejo" }];
+const brands = [{ name: "Citadel" }, { name: "Vallejo" }];
 
 async function seed() {
   const inserted = await db.insert(brandTable).values(brands).returning();

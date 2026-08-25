@@ -5,6 +5,7 @@ import healthRoute from "./v1/routes/healthRoutes.js";
 import readyRoute from "./v1/routes/readyRoute.js";
 import { client } from "./db/client.js";
 import corsConfig from "./middleware/cors.js";
+import brandsRoute from "./v1/routes/brandsRoute.js";
 
 const app = new Hono();
 
@@ -12,6 +13,7 @@ app.route("/", corsConfig);
 
 app.route("/v1", healthRoute);
 app.route("/v1", readyRoute);
+app.route("/v1", brandsRoute);
 
 const server = serve(
   {

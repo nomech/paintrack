@@ -8,7 +8,8 @@
 		"build": "tsc -b && vite build",
 		"typecheck": "tsc -b --pretty false",
 		"lint": "eslint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"test:e2e": "playwright test"
 	},
 	"dependencies": {
 		"@paintrack/shared": "workspace:*",
@@ -21,6 +22,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.29.7",
 		"@eslint/js": "^10.0.1",
+		"@playwright/test": "^1.62.1",
 		"@rolldown/plugin-babel": "^0.2.3",
 		"@tanstack/router-plugin": "^1.168.34",
 		"@types/babel__core": "^7.20.5",
