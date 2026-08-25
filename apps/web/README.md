@@ -10,6 +10,21 @@ Copy `.env.example` to `.env` and adjust as needed:
 | ------------------- | ------------------------------------------- | -------------------------- |
 | `VITE_API_BASEURL`  | Base URL of the API server used by the typed API client (`src/lib/api.ts`) | `http://localhost:3000/` |
 
+Vite inlines `VITE_*` variables into the bundle at build time, not at server start — changing `.env` after `vite build` has already run has no effect on that build's output.
+
+## Production-mode local run
+
+Serves the built static bundle (`vite preview`) instead of the dev server, on a port separate from `npm run dev` (`5173`) so both can run side by side:
+
+```
+npm run build
+npm run preview -- --port 4173 --strictPort
+```
+
+`--strictPort` makes the command fail instead of silently moving to a different port if `4173` is already taken — matters once #32 automates restarting this process against a known port.
+
+If this build should talk to the API's own production-mode run (`http://localhost:3001/`, see `apps/api/README.md`) rather than its dev port, set `VITE_API_BASEURL` for that build specifically — e.g. via a git-ignored `.env.production` (already covered by the `.env.*` gitignore pattern) — since it needs to be in place *before* `npm run build`, not just before `preview`.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
