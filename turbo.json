@@ -5,6 +5,6 @@
 		"typecheck": { "dependsOn": ["^build"] },
 		"test": { "dependsOn": ["^build"], "env": ["DATABASE_URL", "NODE_ENV"] },
 		"lint": {},
-		"dev": { "cache": false, "persistent": true }
+		"dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] }
 	}
 }
