@@ -18,7 +18,7 @@ Serves the built static bundle (`vite preview`) instead of the dev server, on a 
 
 ```
 npm run build
-npm run preview -- --port 4173 --strictPort
+npm start
 ```
 
 `--strictPort` makes the command fail instead of silently moving to a different port if `4173` is already taken — matters once #32 automates restarting this process against a known port.
