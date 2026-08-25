@@ -9,6 +9,7 @@
 		"typecheck": "tsc -b --pretty false",
 		"lint": "eslint .",
 		"preview": "vite preview",
+		"start": "vite preview --port 4173 --strictPort",
 		"test:e2e": "playwright test"
 	},
 	"dependencies": {
