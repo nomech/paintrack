@@ -58,6 +58,7 @@ jobs:
         run: ${{ matrix.command }}
 
   e2e:
+    needs: checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -71,6 +72,15 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build shared package
+        run: pnpm --filter @paintrack/shared build
+
+      - name: Set up test schema
+        working-directory: apps/api
+        env:
+          DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+        run: npx tsx src/db/tests/seedTestSchema.ts
 
       - name: Install Playwright browsers
         working-directory: apps/web
