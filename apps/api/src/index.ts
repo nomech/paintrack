@@ -5,15 +5,19 @@ import healthRoute from "./v1/routes/healthRoutes.js";
 import readyRoute from "./v1/routes/readyRoute.js";
 import { client } from "./db/client.js";
 import corsConfig from "./middleware/cors.js";
+import rateLimiterMiddleware from "./middleware/rateLimiter.js";
 import brandsRoute from "./v1/routes/brandsRoute.js";
 import registrationRoute from "./v1/routes/registrationRoute.js";
 import loginRoute from "./v1/routes/loginRoute.js";
 import logoutRoute from "./v1/routes/logoutRoute.js";
 import refreshRoute from "./v1/routes/refreshRoute.js";
+import { authMiddleware } from "./middleware/tokenVerification.js";
 
 const app = new Hono();
 
+app.route("/", rateLimiterMiddleware);
 app.route("/", corsConfig);
+app.use("*", authMiddleware);
 
 app.route("/v1", healthRoute);
 app.route("/v1", readyRoute);
