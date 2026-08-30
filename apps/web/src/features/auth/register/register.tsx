@@ -1,4 +1,4 @@
-import styles from "./register.module.css";
+import shared from "./../../shared/shared.module.css";
 
 import { useForm } from "react-hook-form";
 import type { registrationSchema } from "@paintrack/shared/schemas";
@@ -15,37 +15,43 @@ export const Register = () => {
 
   return (
     <>
-      <div className={styles.formContainer}>
-        <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <div className={shared.formContainer}>
+        <form className={shared.form} onSubmit={handleSubmit(onSubmit)}>
           <h2>Create your account</h2>
           <p>
             Track every paint on your shelf — opened, unopened, and everything
             in between.
           </p>
-          <div className={styles.inputGroup}>
-            <label htmlFor="displayName">Display ame</label>
+          <div className={shared.inputGroup}>
+            <label htmlFor="displayName" className={shared.label}>
+              Display name
+            </label>
             <input
-              className={styles.input}
+              className={shared.input}
               type="text"
-              placeholder="Display name"
+              placeholder="e.g. John Doe"
               {...register("displayName", { required: true, min: 3 })}
             />
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="email">Email</label>
+          <div className={shared.inputGroup}>
+            <label htmlFor="email" className={shared.label}>
+              Email
+            </label>
             <input
-              className={styles.input}
+              className={shared.input}
               type="email"
-              placeholder="Email"
+              placeholder="you@example.com"
               {...register("email", { required: true })}
             />
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="password">Password</label>
+          <div className={shared.inputGroup}>
+            <label htmlFor="password" className={shared.label}>
+              Password
+            </label>
             <input
-              className={styles.input}
+              className={shared.input}
               type="password"
-              placeholder="Password"
+              placeholder="******"
               {...register("email", {
                 required: true,
                 min: 16,
@@ -53,20 +59,26 @@ export const Register = () => {
               })}
             />
           </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="confirmPassword">Confirm Password</label>
+          <div className={shared.inputGroup}>
+            <label htmlFor="confirmPassword" className={shared.label}>
+              Confirm Password
+            </label>
             <input
-              className={styles.input}
+              className={shared.input}
               type="password"
-              placeholder="Confirm Password"
+              placeholder="******"
               {...register("confirmPassword", { required: true })}
             />
           </div>
 
-          <input type="submit" value="Create account" />
+          <input
+            className={shared.submitButton}
+            type="submit"
+            value="Create account"
+          />
+
           <p>
-            {" "}
-            Already have an account? <a href="/login">Log in</a>{" "}
+            Already have an account? <a href="/login">Log in</a>
           </p>
         </form>
       </div>
