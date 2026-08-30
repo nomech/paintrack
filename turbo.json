@@ -3,7 +3,10 @@
 	"tasks": {
 		"build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
 		"typecheck": { "dependsOn": ["^build"] },
-		"test": { "dependsOn": ["^build"], "env": ["DATABASE_URL", "NODE_ENV"] },
+		"test": {
+			"dependsOn": ["^build"],
+			"env": ["DATABASE_URL", "NODE_ENV", "SUPABASE_URL", "SUPABASE_PUBLISHABLE_KEY"]
+		},
 		"lint": {},
 		"dev": { "cache": false, "persistent": true, "dependsOn": ["^build"] }
 	}

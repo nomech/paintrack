@@ -6,6 +6,10 @@ import readyRoute from "./v1/routes/readyRoute.js";
 import { client } from "./db/client.js";
 import corsConfig from "./middleware/cors.js";
 import brandsRoute from "./v1/routes/brandsRoute.js";
+import registrationRoute from "./v1/routes/registrationRoute.js";
+import loginRoute from "./v1/routes/loginRoute.js";
+import logoutRoute from "./v1/routes/logoutRoute.js";
+import refreshRoute from "./v1/routes/refreshRoute.js";
 
 const app = new Hono();
 
@@ -14,6 +18,10 @@ app.route("/", corsConfig);
 app.route("/v1", healthRoute);
 app.route("/v1", readyRoute);
 app.route("/v1", brandsRoute);
+app.route("/v1", registrationRoute);
+app.route("/v1", loginRoute);
+app.route("/v1", logoutRoute);
+app.route("/v1", refreshRoute);
 
 const server = serve(
   {
