@@ -55,6 +55,8 @@ jobs:
       - name: Run ${{ matrix.name }}
         env:
           DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+          SUPABASE_URL: https://vaisyqyehdkmupktgumi.supabase.co
+          SUPABASE_PUBLISHABLE_KEY: sb_publishable_dVY89NBwVHYSjYPkvBgkGQ_wGLbO2uy
         run: ${{ matrix.command }}
 
   e2e:

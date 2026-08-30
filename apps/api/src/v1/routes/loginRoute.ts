@@ -1,4 +1,4 @@
-import { Hono } from "Hono";
+import { Hono } from "hono";
 import { supabase } from "../../db/client.js";
 import { loginSchema } from "@paintrack/shared/schemas.js";
 
