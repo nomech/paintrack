@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import type { User, Session } from '@supabase/supabase-js';
 
 export const Paint = z.object({
 	id: z.number().int().positive(),
@@ -50,3 +51,12 @@ export const AddPaintSchema = z.object({
 export type AddPaintSchema = z.infer<typeof AddPaintSchema>;
 
 export type formData = registrationSchema | loginSchema | AddPaintSchema;
+
+export type AuthContextType {
+	session: Session | null;
+	user: User | null;
+	isLoading: boolean;
+	error: string;
+	signIn: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+	//signOut: () => Promise<void>;
+}

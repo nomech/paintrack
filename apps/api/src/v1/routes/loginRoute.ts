@@ -7,6 +7,7 @@ const loginRoute = new Hono();
 loginRoute.post("/login", async (c) => {
   const req = await c.req.json();
   const { data: parsedData, success } = loginSchema.safeParse(req);
+  console.log(parsedData, success);
 
   if (!success) {
     return c.json({ success: false }, 400);

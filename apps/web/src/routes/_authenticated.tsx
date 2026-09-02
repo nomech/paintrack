@@ -1,9 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-import LandingPage from "../features/LandingPage";
-
-export const Route = createFileRoute("/")({
-  beforeLoad: ({ context }) => {
+export const Route = createFileRoute("/_authenticated")({
+  beforeLoad: ({ context, location }) => {
     console.log("Before load context:", context);
     if (!context.auth.user) {
       throw redirect({
@@ -14,5 +12,4 @@ export const Route = createFileRoute("/")({
       });
     }
   },
-  component: LandingPage,
 });

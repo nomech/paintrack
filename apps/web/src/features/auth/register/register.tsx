@@ -4,36 +4,29 @@ import { registrationSchema as registerData } from "@paintrack/shared/schemas";
 import type { registrationSchema } from "@paintrack/shared/schemas";
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
+import { LoaderCircle } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export const Register = () => {
   const [serverError, setServerError] = useState<string>("");
+  const [registered, setRegistered] = useState(false);
   const navigate = useNavigate();
 
   const {
     register,
     handleSubmit,
-    setError,
     formState: { errors, isSubmitting },
-  } = useForm<registrationSchema>();
+  } = useForm<registrationSchema>({
+    resolver: zodResolver(registerData),
+  });
 
   if (errors) {
     console.log(errors);
   }
 
   const onSubmit = async (data: registrationSchema) => {
-    console.log("submitting");
     setServerError("");
-
-    // Validate with Zod
-    const result = registerData.safeParse(data);
-
-    if (!result.success) {
-      result.error.issues.forEach((err) => {
-        const path = err.path[0] as keyof registrationSchema;
-        setError(path, { message: err.message });
-      });
-      return;
-    }
+    setRegistered(false);
 
     try {
       const registerResult = await fetch("http://localhost:3000/v1/register", {
@@ -45,7 +38,10 @@ export const Register = () => {
       });
 
       if (registerResult.ok) {
-        navigate({ to: "/" });
+        setRegistered(true);
+        setTimeout(() => {
+          navigate({ to: "/" });
+        }, 1000);
       } else {
         setServerError("Invalid credentials. Please try again.");
       }
@@ -71,7 +67,7 @@ export const Register = () => {
               className={shared.input}
               type="text"
               placeholder="e.g. John Doe"
-              {...register("displayName", { required: true, min: 3 })}
+              {...register("displayName")}
             />
           </div>
           <div className={shared.inputGroup}>
@@ -82,7 +78,7 @@ export const Register = () => {
               className={shared.input}
               type="email"
               placeholder="you@example.com"
-              {...register("email", { required: true })}
+              {...register("email")}
             />
           </div>
           {errors.email && (
@@ -96,15 +92,7 @@ export const Register = () => {
               className={shared.input}
               type="password"
               placeholder="******"
-              {...register("password", {
-                required: true,
-                min: 16,
-                pattern: {
-                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).+$/,
-                  message:
-                    "Password must include lowercase, uppercase, a number, and a special character",
-                },
-              })}
+              {...register("password")}
             />
           </div>
           {errors.password && (
@@ -118,22 +106,27 @@ export const Register = () => {
               className={shared.input}
               type="password"
               placeholder="******"
-              {...register("confirmPassword", { required: true })}
+              {...register("confirmPassword")}
             />
           </div>
 
           {serverError && <p className={shared.error}>{serverError}</p>}
-          {errors && (
-            <p className={shared.error}>Please check the form for errors.</p>
-          )}
 
           <button
             className={shared.submitButton}
             type="submit"
-            value="Create account"
-            disabled={isSubmitting}
+            disabled={isSubmitting || registered}
           >
-            Create account
+            {registered ? (
+              "Account created successfully!"
+            ) : isSubmitting ? (
+              <>
+                <LoaderCircle className={shared.animateSpin} />
+                Creating account...
+              </>
+            ) : (
+              "Create account"
+            )}
           </button>
 
           <p>
